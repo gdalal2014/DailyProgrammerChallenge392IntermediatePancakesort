@@ -63,14 +63,19 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
             var fileValue = System.IO.File.ReadAllText((!string.IsNullOrWhiteSpace(stringPath) ? stringPath : string.Empty));
 
             long[] arrayToTest = CreateLongArray(fileValue).ToArray();
+            long[] arrayToTest2 = CreateArray<long>(fileValue).ToArray();
             TrackerClass.Flipfrontiteration = 0;
             var orderedList = arrayToTest.PancakeSortLongArray();
-
+            var flipsIteration = TrackerClass.Flipfrontiteration;
+            TrackerClass.Flipfrontiteration = 0;
+            var orderedList2 = arrayToTest2.PancakeSortArray().ToArray();
+            var flipsIteration2 = TrackerClass.Flipfrontiteration;
             (var isTheListOrdered, var outOfOrderList) = orderedList.CheckToSeeIfLongArrayIsInOrder();
-
+            (var isTheListOrdered2, var outOfOrderList2) = orderedList2.CheckToSeeIfArrayIsInOrder<long>();
 
             timer.Stop();
-            Console.WriteLine($"It took {TrackerClass.Flipfrontiteration} Iterations");
+            if (isTheListOrdered) Console.WriteLine($"It took {flipsIteration} Iterations");
+            if (isTheListOrdered2) Console.WriteLine($"It took {flipsIteration2} Iterations");
             Console.WriteLine($"It took {timer.Elapsed} to process");
 
         }
@@ -89,6 +94,22 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
                 {
                     returnIEnumerable = returnIEnumerable.Concat((new[] { valueLong }));
                 }
+            }
+
+            return returnIEnumerable;
+        }
+
+        private static IEnumerable<T> CreateArray<T>(string fileValue) where T : IComparable<T> 
+        {
+            var regex = new Regex("[\\n\\r\\s]+");
+            var listOfValues = regex.Split(fileValue).ToList();
+
+            var returnIEnumerable = Enumerable.Empty<T>();
+            for (var i = 0; i < listOfValues.Count; i++)
+            {
+                var value = listOfValues[i];
+                var genericValue = (T)Convert.ChangeType(value, typeof(T));
+                returnIEnumerable = returnIEnumerable.Concat((new[] { genericValue }));
             }
 
             return returnIEnumerable;

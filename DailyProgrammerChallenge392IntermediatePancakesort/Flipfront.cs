@@ -131,7 +131,7 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
             return returnList;
         }
 
-        public static T[] PancakeSortLongArray<T>(this T[] list) where T : IComparable<T>
+        public static T[] PancakeSortArray<T>(this T[] list) where T : IComparable<T>
         {
             if (list == null) { throw new ArgumentNullException(nameof(list)); }
             var returnList = list;
