@@ -68,7 +68,7 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
             var orderedList = arrayToTest.PancakeSortLongArray();
             var flipsIteration = TrackerClass.Flipfrontiteration;
             TrackerClass.Flipfrontiteration = 0;
-            var orderedList2 = arrayToTest2.PancakeSortArray().ToArray();
+            var orderedList2 = arrayToTest2.PancakeSort().ToArray();
             var flipsIteration2 = TrackerClass.Flipfrontiteration;
             (var isTheListOrdered, var outOfOrderList) = orderedList.CheckToSeeIfLongArrayIsInOrder();
             (var isTheListOrdered2, var outOfOrderList2) = orderedList2.CheckToSeeIfArrayIsInOrder<long>();

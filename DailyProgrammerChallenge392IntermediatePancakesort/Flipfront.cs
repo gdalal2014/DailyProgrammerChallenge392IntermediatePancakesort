@@ -26,15 +26,8 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
                 indexValue--;
             }
 
-            var returnIEnumerable = Enumerable.Empty<T>();
-            for (var i = 0; i < newArray.Count(); i++)
-            {
-                var value = newArray[i];
-                returnIEnumerable = returnIEnumerable.Concat((new[] { value }));
-
-            }
             TrackerClass.Flipfrontiteration++;
-            return returnIEnumerable;   
+            return newArray.AsEnumerable();   
         }
 
         public static void FlipfrontExecuteLongArray(this long[] array, int indexOfValues)
@@ -87,44 +80,11 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
 
             while (n > 1)
             {
-                var maxIndexValue = 0;
-                if (n > 1000)
-                {
-                    var indexValue = int.Parse(Math.Floor(decimal.Parse((n / 10).ToString())).ToString());
-                    returnList.Take(indexValue).MaxValueIndex(indexValue);
-                    returnList.Skip(indexValue).Take(indexValue).MaxValueIndex(indexValue);
-
-                    var tasks = new[]
-                    {
-                    Task.Factory.StartNew(() => returnList.Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(2 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(3 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(4 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(5 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(6 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(7 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(8 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-                    Task.Factory.StartNew(() => returnList.Skip(9 * indexValue).Take(indexValue).MaxValueIndex(indexValue)),
-
-                };
-                    
-
-                    var returnListOfMaxValues = Task.WhenAll(tasks);
-
-                    (maxIndexValue, _) = returnListOfMaxValues.Result.Max(x => (x.Item1, x.Item2));
-
-
-            }
-                else
-                { 
-                      (maxIndexValue, _) = returnList.MaxValueIndex(n);
-                }
-
-                returnList.FlipfrontExecute(maxIndexValue);
-                returnList.FlipfrontExecute(n - 1); 
+                var value = returnList.Take(n).Max();
+                var maxIndexValue = Array.FindLastIndex(returnList.Take(n).ToArray(), item => item.Equals(value));
+                returnList = returnList.FlipfrontExecute(maxIndexValue).ToArray();
+                returnList = returnList.FlipfrontExecute(n - 1).ToArray(); 
                 n--;
-                Console.WriteLine($"{n} iterations left");
             }
 
 
@@ -139,8 +99,8 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
 
             while (lengthOfList > 1)
             {
-
-                (var maxIndexValue, _) = returnList.MaxValueIndex(lengthOfList);
+                var value = returnList.Take(lengthOfList).Max();
+                var maxIndexValue = Array.FindLastIndex(returnList.Take(lengthOfList).ToArray(), item => item.Equals(value));
                 returnList.FlipfrontExecuteArray(maxIndexValue);
                 returnList.FlipfrontExecuteArray(lengthOfList - 1);
                 lengthOfList--;
@@ -159,7 +119,7 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
             while (lengthOfList > 1)
             {
                
-                (var maxIndexValue, _) = returnList.MaxValueIndex(lengthOfList);
+                (var maxIndexValue, var maxValue) = returnList.MaxValueIndex(lengthOfList);
                 returnList.FlipfrontExecuteLongArray(maxIndexValue);
                 returnList.FlipfrontExecuteLongArray(lengthOfList - 1);
                 lengthOfList--;
@@ -180,11 +140,11 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
         /// <param name="list"></param>
         /// <returns></returns>
 
-        public static (int, int) MaxValueIndex<T>(this IEnumerable<T> list, int k) where T:IComparable<T>
+        public static (int, T?) MaxValueIndex<T>(this IEnumerable<T> list, int k) where T:IComparable<T>
         {
             if (list == null) { throw new ArgumentNullException(nameof(list)); }
             var index = 0;
-            var maxValue = 0;
+            T? maxValue = default;
             for (var i = 0; i < k ; i++)
             {
                 var valueIndex = list.ElementAt(index);
@@ -193,11 +153,9 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
                 if (valueAtI.CompareTo(valueIndex) > 0)
                 {
                     index = i;
-                    maxValue = int.Parse(valueAtI.ToString());
+                    maxValue = (T)Convert.ChangeType(valueAtI, typeof(T));
                 }
-                
             }
-           
             return (index, maxValue);
         }
 
