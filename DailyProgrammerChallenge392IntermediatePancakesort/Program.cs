@@ -62,7 +62,7 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
 
             var fileValue = System.IO.File.ReadAllText((!string.IsNullOrWhiteSpace(stringPath) ? stringPath : string.Empty));
 
-            long[] arrayToTest = CreateArray(fileValue).ToArray();
+            long[] arrayToTest = CreateLongArray(fileValue).ToArray();
             TrackerClass.Flipfrontiteration = 0;
             var orderedList = arrayToTest.PancakeSortLongArray();
 
@@ -75,7 +75,7 @@ namespace DailyProgrammerChallenge392IntermediatePancakesort
 
         }
 
-        private static IEnumerable<long> CreateArray(string fileValue)
+        private static IEnumerable<long> CreateLongArray(string fileValue)
         {
             var regex = new Regex("[\\n\\r\\s]+");
             var listOfValues = regex.Split(fileValue).ToList();
